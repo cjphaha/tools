@@ -52,3 +52,12 @@ func FloatToString(input_num float64) string {
 	// to convert a float number to a string
 	return strconv.FormatFloat(float64(input_num), 'f', 6, 64)
 }
+//字符串转为时间
+func StringToData(stringTime string) time.Time{
+	if len(stringTime)==10 {
+		stringTime = stringTime + " 00:00:00"
+	}
+	loc, _ := time.LoadLocation("Local")
+	the_time, _ := time.ParseInLocation("2006-01-02 00:00:00", stringTime, loc)
+	return the_time
+}
