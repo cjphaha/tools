@@ -25,26 +25,27 @@ func (u *MailUser) NewMailUser(Host, Server_Addr, User, Password string) *MailUs
 }
 
 func (m *MailUser) SendEmail(to,html,fileName string)  bool{
-	if html == ""{
-		html = "导出数据已通过邮件发送到您的邮箱"
-	}
 	mime := bytes.NewBuffer(nil)
 	//设置邮件
-	boundary :="华丽的分界线"
-	mime.WriteString("From: 邮件名称<"+m.User+">\r\nTo: "+to+"\r\nSubject: 数据导出\r\nMIME-Version: 1.0\r\n")
-	mime.WriteString("Content-Type: multipart/mixed; boundary="+boundary+"\r\n")
+	boundary :="氕氘氚"
+	mime.WriteString("From: 邮件名称<"+m.User+">\r\nTo: "+to+"\r\nSubject: 爬虫数据导出\r\nMIME-Version: 1.0\r\n")
+	mime.WriteString("Content-Type: multipart/mixed; boundary="+boundary+"\r\n\r\n")
+
 	mime.WriteString("--"+boundary+"\r\n")    //自定义邮件内容分隔符
+
 	//邮件正文
-	//html :="导出数据已通过邮件发送到您的邮箱"  //邮件正文
-	mime.WriteString("Content-Type: text/html; charset=utf-8\r\n")  //text/html html text/plain 纯文本
+	//html ="导出数据已通过邮件发送到您的邮箱,请下载后用excel打开"  //邮件正文
+	mime.WriteString("Content-Type: text/html; charset=utf-8\r\n\r\n")  //text/html html text/plain 纯文本
 	mime.WriteString(html)
-	mime.WriteString("\r\n")
+	mime.WriteString("\r\n\r\n\r\n")
+
 	//附件
 	mime.WriteString("--"+boundary+"\r\n")
 	mime.WriteString("Content-Type: application/vnd.ms-excel\r\n")   //application/octet-stream
 	mime.WriteString("Content-Transfer-Encoding: base64\r\n")
 	mime.WriteString("Content-Disposition: attachment; filename=\""+fileName+"\"")
-	mime.WriteString("\r\n")
+	mime.WriteString("\r\n\r\n")
+
 	//将文件转为base64
 
 	//读取并编码文件内容
@@ -55,6 +56,8 @@ func (m *MailUser) SendEmail(to,html,fileName string)  bool{
 		fmt.Print(err)
 
 	}
+
+
 	b :=make([]byte, base64.StdEncoding.EncodedLen(len(attaData)))
 	base64.StdEncoding.Encode(b, attaData)
 	mime.Write(b)
@@ -71,5 +74,6 @@ func (m *MailUser) SendEmail(to,html,fileName string)  bool{
 	}else{
 		fmt.Println("邮件发送成功!")
 	}
+
 	return true
 }
